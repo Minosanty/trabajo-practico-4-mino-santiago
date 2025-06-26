@@ -17,6 +17,6 @@ app.use((req, res)=>{
 
 start_DB().then(()=>{
     app.listen(PORT, ()=>{
-        console.log("Servidor corriendo.");
+        console.log("Servidor corriendo en http://localhost:"+PORT);
     });
 });

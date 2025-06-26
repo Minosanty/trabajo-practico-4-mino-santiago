@@ -1,5 +1,5 @@
 import Character from "../models/character.model.js";
-export const crearPersonaje=async(req,res)=>{
+export const crearPersonaje= async (req,res)=>{
    const{name,ki,race,gender,description }=req.body
    if(req.body){
     for(let valor in req.body){
@@ -11,9 +11,9 @@ export const crearPersonaje=async(req,res)=>{
     try {
         //validacion para que los datos no vengan vacios 
         if(name=== undefined)return res.status(400).json({message:"nombre no puede estar vacio"});
-        if(ki === undefined)return res.status(400).json({message:"nombre no puede estar vacio"});
-        if(race === undefined)return res.status(400).json({message:"nombre no puede estar vacio"});
-        if(gender === undefined)return res.status(400).json({message:"nombre no puede estar vacio"});
+        if(ki === undefined)return res.status(400).json({message:"Ki no puede estar vacio"});
+        if(race === undefined)return res.status(400).json({message:"Race no puede estar vacio"});
+        if(gender === undefined)return res.status(400).json({message:"Gender no puede estar vacio"});
 
         const nombreUnico = await Character.findOne({where: {name}});
         if (nombreUnico !== null) return res.status(400).json({message: "nombre exitente"});
@@ -49,19 +49,22 @@ export const actulizarPer = async(req, res) =>{
    const {name, ki, race, gender, descripcion}=req.body
 
 try{
- const nombreUnico = await Character.findOne({where: {name}});
-        if(nombreUnico !==null) return res.status(400).json({message: "nombre exixtente"});
+    if(name){
+        const nombreUnico = await Character.findOne({where: {name}});
+        if(nombreUnico !==null) return res.status(400).json({message: "nombre exixtente"});}
+ 
 
 const[updated] = await Character.update({name, ki, race, gender, descripcion},{
     where: {id: req.params.id}
 });
-if(updated === 0) return res.status(400).json ({message: "el personaje no existe"});
+if(updated === 0) return res.status(400).json({message: "el personaje no existe"});
 
 return res.status(200).json({message:"se actualizo el personaje"});
 
 
 } 
 catch (error) {
+        console.log(error)
         res.status(500).json({mensaje:"error en la creacion del personaje "});
     }
 }
@@ -72,9 +75,13 @@ export const obtenerTodosLosPersonajes = async(req,res)=>{
         const personajes = await Character.findAll();
         if(personajes.length=== 0) return res.status(404).json({message: "no se encontro ningun personaje "})
 
-        return req.status(200).json(personajes);
-}   catch(error){}
-         res.status(500).json({message: error.message});
+        return res.status(200).json(personajes);
+}   catch(error){
+    console.log(error)
+    res.status(500).json({message: error.message});
+}
+
+         
 }
 
 
@@ -85,18 +92,21 @@ if(personaje) return res.status(200).json(personaje);
 
 return req.status(404).json({message:"el personaje no existe "});
 
-}catch(error){}
-    res.status(500).json({message: error.message});
+}catch(error){ res.status(500).json({message: error.message});}
+   
 }
 
 export const eliminacion= async(req,res)=>{
     try{
-const eliminados = await Character.destroy({whers:{id:req.params.id}});
+const eliminados = await Character.destroy({where:{id:req.params.id}});
+console.log(eliminados)
 
-if (eliminados===0)return res.status(404).json({message: "personaje no encontrado"})
- res.status(204).json({message: "personaje eliminado"});
+if (eliminados===0)return res.status(404).json({message:"personaje no encontrado"})
+
+ res.status(204).json({message:"personaje eliminado"});
 
 }catch(error){
-    res.status(500).json({message: error.message});
+    console.log(error)
+    res.status(500).json({message:error.message});
 }
 }

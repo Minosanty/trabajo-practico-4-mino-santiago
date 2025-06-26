@@ -3,9 +3,9 @@ import { actulizarPer, crearPersonaje, eliminacion, obtenerPorId, obtenerTodosLo
 const router = express.Router();
 
 router.get("/characters", obtenerTodosLosPersonajes);
-router.get("/characters", obtenerPorId);
+router.get("/characters/:id", obtenerPorId);
 router.post("/characters", crearPersonaje);
-router.put("/characters", actulizarPer);
-router.delete("/characters", eliminacion);
+router.put("/characters/:id", actulizarPer);
+router.delete("/characters/:id", eliminacion);
 
 export default router;
